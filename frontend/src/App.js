@@ -3,18 +3,35 @@ import HomePage from "./pages/HomePage";
 import ProductDetail from "./pages/ProductDetail";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
+import AddProduct from "./pages/AddProduct";
 
 function App() {
+    const userInfo = localStorage.getItem("userInfo");
+
+    const handleLogout = () => {
+        localStorage.removeItem("userInfo");
+        window.location.href = "/signin";
+    };
+
     return (
         <div>
             <BrowserRouter>
                 <header>
                     <div className="nav">
-                        <div className="col-left">
+                        <div>
                             <Link to="/">Toko Klontong</Link>
                         </div>
                         <div className="col-right">
-                            <Link to="/signin">Sign In</Link>
+                            {userInfo ? (
+                                <>
+                                    <Link to="/addproduct">Add Product</Link>
+                                    <Link to="#logout" onClick={handleLogout}>
+                                        logout
+                                    </Link>
+                                </>
+                            ) : (
+                                <Link to="/signin">Sign In</Link>
+                            )}
                         </div>
                     </div>
                 </header>
@@ -24,6 +41,7 @@ function App() {
                         <Route path="/product/:slug" element={<ProductDetail />}></Route>
                         <Route path="/signup" element={<Signup />}></Route>
                         <Route path="/signin" element={<Signin />}></Route>
+                        <Route path="/addproduct" element={<AddProduct />}></Route>
                     </Routes>
                 </main>
             </BrowserRouter>

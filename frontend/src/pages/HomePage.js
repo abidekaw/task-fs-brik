@@ -5,42 +5,50 @@ function HomePage() {
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
-    const [counter, setCounter] = useState(1);
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 10;
+    const totalPage = Math.ceil(100 / itemsPerPage);
 
-    const getProducts = async (val, page) => {
-        const params = val ? `/search?q=${val}` : "";
+    const getProducts = async (val) => {
+        let url = `https://dummyjson.com/products`;
+        const skip = (page - 1) * itemsPerPage;
+        const pagination = `?limit=${itemsPerPage}&skip=${skip}`;
+        const search = `/search?q=${val}`;
+        val ? (url += search) : (url += pagination);
         setLoading(true);
-        // https://dummyjson.com/products?limit=10&skip=10&select=title,price
-        const res = await fetch(`https://dummyjson.com/products${params}`);
-        const resJson = await res.json();
-        console.log(resJson);
-        setProducts(resJson.products);
+
+        try {
+            const res = await fetch(url);
+            const resJson = await res.json();
+            // console.log(resJson);
+            setProducts(resJson.products);
+        } catch (error) {
+            console.log(error);
+        }
         setLoading(false);
-        // const totalPage = Math.ceil(resJson.total / resJson.limit)
-        // const currentPage =
     };
 
     const handleClickSearch = () => {
-        getProducts(search, counter);
+        getProducts(search);
     };
 
     useEffect(() => {
         getProducts();
-    }, []);
+    }, [page]);
 
     const prev = () => {
-        setCounter(counter <= 1 ? 1 : counter - 1);
+        setPage(page - 1);
     };
 
     const next = () => {
-        // setCounter(counter >= totalPage ? totalPage : counter + 1)
+        setPage(page + 1);
     };
 
     return (
         <div>
-            <div>
+            <div className="search input-wrapper">
                 <input type="search" placeholder="search..." onChange={(e) => setSearch(e.target.value)} />
-                <button type="button" onClick={handleClickSearch}>
+                <button type="button" onClick={handleClickSearch} className="btn ">
                     Search
                 </button>
             </div>
@@ -63,13 +71,17 @@ function HomePage() {
                           </Link>
                       ))}
             </div>
-            <button type="button" onClick={prev}>
-                prev
-            </button>
-            <p>1 / 3</p>
-            <button type="button" onClick={next}>
-                next
-            </button>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", width: "50%", margin: "20px auto" }}>
+                <button type="button" onClick={prev} disabled={page === 1} className="btn">
+                    prev
+                </button>
+                <p>
+                    {page} / {totalPage}
+                </p>
+                <button type="button" onClick={next} disabled={page === totalPage} className="btn">
+                    next
+                </button>
+            </div>
         </div>
     );
 }

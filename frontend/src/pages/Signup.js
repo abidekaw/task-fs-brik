@@ -23,23 +23,27 @@ function Signup() {
 
     return (
         <div>
-            <h3>Signup</h3>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="input-wrapper">
+                <h2>Sign Up</h2>
                 <div>
-                    <label htmlFor="name">name :</label>
+                    {/* <label htmlFor="name">name :</label> */}
                     <input type="text" required placeholder="name" id="name" onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div>
-                    <label htmlFor="email">email :</label>
+                    {/* <label htmlFor="email">email :</label> */}
                     <input type="email" required placeholder="email" id="email" onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div>
-                    <label htmlFor="password">password :</label>
+                    {/* <label htmlFor="password">password :</label> */}
                     <input type="password" required placeholder="password" id="password" onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button type="submit">submit</button>
+                <button type="submit" className="btn" style={{ width: "40%", outline: "none" }}>
+                    Submit
+                </button>
+                <div>
+                    <Link to="/signin">Sign In</Link>
+                </div>
             </form>
-            <Link to="/signin">Sign In</Link>
         </div>
     );
 }
